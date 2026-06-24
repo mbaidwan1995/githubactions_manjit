@@ -1,46 +1,33 @@
-name:  NodeJs
+name: Node CI Pipeline
 
-on: 
+on:
   push:
-     branch: master
+    branches:
+      - main
 
-permissions: 
-   security-events: write
-   issues: write
-   actions: read
-   contents: read
+  workflow_dispatch:
 
-jobs: 
-  Build-Test: 
-    runs-on:  ubuntu-latest
-    steps: 
-      - name:  Checkout Code
-        uses:  actions/checkout@v7
+jobs:
+  build:
 
-      - name: Set up Nodejs
-        uses: actions/setup-node@v6
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: '24'
+          node-version: 20
 
-      - name: Build
+      - name: Install Dependencies
         run: npm install
 
-      - name: test
-        run: npm test
+      - name: Build Application
+        run: npm run build
 
-
-      - name: Cache Dependencies
-        uses: actions/cache@v5
-        with:
-          path: ~/.npm
-          key:  ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          
-      - name: Artifact upload
-        uses: actions/upload-artifact@v7
-        with:
-          name: artifact-1
-          path: |
-             package*
-
-      - name: Deploy
-        run: echo "code is deployed"
+      - name: Start Server Test
+        run: |
+          npm start &
+          sleep 15
