@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 env:
-  DOCKERHUB_REPO: rahamshaik/nodeimage
+  DOCKERHUB_REPO: mannybaidwan/nodeimage
   APP_DIR: gabr1-master
 
 jobs:
